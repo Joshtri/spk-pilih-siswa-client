@@ -1,37 +1,19 @@
-import React, { useState } from "react";
+import React from "react";
 import { FaEdit, FaTrashAlt, FaEye } from "react-icons/fa";
-import ReusableModal from "../partials/ReusableModal";
 import { Kriteria } from "../../types/kriteria";
 
-const KriteriaList: React.FC = () => {
-  const [selectedKriteria, setSelectedKriteria] = useState<Kriteria | null>(null);
-  const [modalType, setModalType] = useState<"view" | "edit" | "delete" | null>(null);
+interface KriteriaListProps {
+  kriteria: Kriteria[]; // Data yang diterima dari parent
+  onEdit: (kriteria: Kriteria) => void; // Callback untuk edit
+  onDelete: (id: number) => void; // Callback untuk delete
+  onView: (kriteria: Kriteria) => void; // Callback untuk view
 
-  const kriteria: Kriteria[] = [
-    { id: 1, nama_kriteria: "Nilai Akademik", jenis_kriteria: "Benefit", bobot_kriteria: 0.4 },
-    { id: 2, nama_kriteria: "Kehadiran", jenis_kriteria: "Benefit", bobot_kriteria: 0.3 },
-    { id: 3, nama_kriteria: "Ekstrakurikuler", jenis_kriteria: "Benefit", bobot_kriteria: 0.3 },
-  ];
+}
 
-  const openModal = (type: "view" | "edit" | "delete", kriteria: Kriteria) => {
-    setSelectedKriteria(kriteria);
-    setModalType(type);
-  };
-
-  const closeModal = () => {
-    setSelectedKriteria(null);
-    setModalType(null);
-  };
-
-  const handleDelete = () => {
-    console.log("Deleted:", selectedKriteria?.id);
-    closeModal();
-  };
-
-  const handleSave = () => {
-    console.log("Saved:", selectedKriteria);
-    closeModal();
-  };
+const KriteriaList: React.FC<KriteriaListProps> = ({ kriteria, onEdit, onDelete, onView }) => {
+  if (kriteria.length === 0) {
+    return <p className="text-gray-500 text-center">Tidak ada data kriteria yang tersedia.</p>;
+  }
 
   return (
     <div className="bg-white p-6 shadow-md rounded-lg">
@@ -52,15 +34,27 @@ const KriteriaList: React.FC = () => {
               <td className="border border-gray-300 p-3">{item.id}</td>
               <td className="border border-gray-300 p-3">{item.nama_kriteria}</td>
               <td className="border border-gray-300 p-3">{item.jenis_kriteria}</td>
-              <td className="border border-gray-300 p-3">{item.bobot_kriteria * 100}</td>
+              <td className="border border-gray-300 p-3">{item.bobot_kriteria}</td>
               <td className="border border-gray-300 p-3 text-center flex justify-center gap-4">
-                <button className="text-green-500 hover:text-green-700" title="View" onClick={() => openModal("view", item)}>
+                <button
+                  className="text-green-500 hover:text-green-700"
+                  title="View"
+                  onClick={() => onView(item)}
+                >
                   <FaEye size={18} />
                 </button>
-                <button className="text-blue-500 hover:text-blue-700" title="Edit" onClick={() => openModal("edit", item)}>
+                <button
+                  className="text-blue-500 hover:text-blue-700"
+                  title="Edit"
+                  onClick={() => onEdit(item)}
+                >
                   <FaEdit size={18} />
                 </button>
-                <button className="text-red-500 hover:text-red-700" title="Delete" onClick={() => openModal("delete", item)}>
+                <button
+                  className="text-red-500 hover:text-red-700"
+                  title="Delete"
+                  onClick={() => onDelete(item.id)}
+                >
                   <FaTrashAlt size={18} />
                 </button>
               </td>
@@ -68,47 +62,6 @@ const KriteriaList: React.FC = () => {
           ))}
         </tbody>
       </table>
-
-      {/* Modal */}
-      {modalType === "view" && selectedKriteria && (
-        <ReusableModal title="Detail Kriteria" isOpen={!!modalType} onClose={closeModal}>
-          <p><strong>Nama:</strong> {selectedKriteria.nama_kriteria}</p>
-          <p><strong>Jenis:</strong> {selectedKriteria.jenis_kriteria}</p>
-          {/* <p><strong>Deskripsi:</strong> {selectedKriteria.jenis_kriteria_desc}</p> */}
-          <p><strong>Bobot:</strong> {selectedKriteria.bobot_kriteria * 100}%</p>
-        </ReusableModal>
-      )}
-
-      {modalType === "edit" && selectedKriteria && (
-        <ReusableModal title="Edit Kriteria" isOpen={!!modalType} onClose={closeModal}>
-          <label className="block mb-2">Nama Kriteria:</label>
-          <input type="text" className="w-full border border-gray-300 rounded p-2" defaultValue={selectedKriteria.nama_kriteria} />
-          <label className="block mt-4 mb-2">Jenis Kriteria:</label>
-          <input type="text" className="w-full border border-gray-300 rounded p-2" defaultValue={selectedKriteria.jenis_kriteria} />
-          <div className="mt-4 flex justify-end gap-2">
-            <button className="px-4 py-2 bg-gray-300 rounded" onClick={closeModal}>
-              Batal
-            </button>
-            <button className="px-4 py-2 bg-blue-500 text-white rounded" onClick={handleSave}>
-              Simpan
-            </button>
-          </div>
-        </ReusableModal>
-      )}
-
-      {modalType === "delete" && selectedKriteria && (
-        <ReusableModal title="Konfirmasi Hapus" isOpen={!!modalType} onClose={closeModal}>
-          <p>Apakah Anda yakin ingin menghapus kriteria <strong>{selectedKriteria.nama_kriteria}</strong>?</p>
-          <div className="mt-4 flex justify-end gap-2">
-            <button className="px-4 py-2 bg-gray-300 rounded" onClick={closeModal}>
-              Batal
-            </button>
-            <button className="px-4 py-2 bg-red-500 text-white rounded" onClick={handleDelete}>
-              Hapus
-            </button>
-          </div>
-        </ReusableModal>
-      )}
     </div>
   );
 };
