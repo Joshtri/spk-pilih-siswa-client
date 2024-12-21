@@ -1,3 +1,4 @@
+// Updated KriteriaForm component
 import React, { useState, useEffect } from "react";
 import { Kriteria } from "../../types/kriteria";
 
@@ -16,7 +17,7 @@ const KriteriaForm: React.FC<KriteriaModalFormProps> = ({
 }) => {
   const [formData, setFormData] = useState<Omit<Kriteria, "id">>({
     nama_kriteria: "",
-    bobot_kriteria: 0,
+    bobot_kriteria: null!,
     jenis_kriteria: "",
   });
 
@@ -30,7 +31,7 @@ const KriteriaForm: React.FC<KriteriaModalFormProps> = ({
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: value,
+      [name]: name === "bobot_kriteria" ? parseInt(value) || 0 : value, // Parse as integer for bobot_kriteria
     }));
   };
 
@@ -68,7 +69,7 @@ const KriteriaForm: React.FC<KriteriaModalFormProps> = ({
 
           <div className="mb-4">
             <label htmlFor="bobot_kriteria" className="block text-sm font-medium text-gray-700">
-              Bobot Kriteria
+              Bobot Kriteria (Dalam Persen)
             </label>
             <input
               type="number"
@@ -78,9 +79,8 @@ const KriteriaForm: React.FC<KriteriaModalFormProps> = ({
               onChange={handleChange}
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
               required
-              step="0.01"
               min="0"
-              max="1"
+              max="100"
             />
           </div>
 
