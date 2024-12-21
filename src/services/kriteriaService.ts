@@ -9,13 +9,15 @@ export const getAllKriteria = async (): Promise<Kriteria[]> => {
   try {
     console.log("[GET] Fetching all Kriteria...");
     const response = await axios.get<ApiResponse<Kriteria[]>>(API_URL);
-    console.log("[GET] Response data:", response.data);
-    return response.data.data;
+    const data = response.data?.data || []; // Pastikan data selalu berupa array
+    console.log("[GET] Response data:", data);
+    return data;
   } catch (error) {
     console.error("[GET] Error fetching all Kriteria:", (error as Error).message);
-    throw new Error("Gagal mendapatkan data Kriteria");
+    return []; // Kembalikan array kosong jika terjadi kesalahan
   }
 };
+
 
 // Fetch Kriteria by ID
 export const getKriteriaById = async (id: number): Promise<Kriteria> => {
