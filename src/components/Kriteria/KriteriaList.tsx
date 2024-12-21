@@ -19,7 +19,7 @@ const KriteriaList: React.FC<KriteriaListProps> = ({ kriteria, onEdit, onDelete 
       <table className="w-full table-auto border-collapse border border-gray-200 rounded-lg">
         <thead>
           <tr className="bg-blue-100 text-blue-800 text-sm">
-            <th className="border border-gray-300 p-3 text-left">ID</th>
+            <th className="border border-gray-300 p-3 text-left">No</th>
             <th className="border border-gray-300 p-3 text-left">Nama Kriteria</th>
             <th className="border border-gray-300 p-3 text-left">Bobot (%)</th>
             <th className="border border-gray-300 p-3 text-left">Jenis Kriteria</th>
@@ -27,9 +27,10 @@ const KriteriaList: React.FC<KriteriaListProps> = ({ kriteria, onEdit, onDelete 
           </tr>
         </thead>
         <tbody>
-          {kriteria.map((item) => (
+          {kriteria.map((item, index) => (
             <tr key={item.id} className="hover:bg-gray-50 transition duration-200 ease-in-out">
-              <td className="border border-gray-300 p-3">{item.id}</td>
+              <td className="border border-gray-300 p-3">{index + 1}</td>
+              {/* <td className="border border-gray-300 p-3">{item.id}</td> */}
               <td className="border border-gray-300 p-3">{item.nama_kriteria}</td>
               <td className="border border-gray-300 p-3">{item.bobot_kriteria * 100}</td>
               <td className="border border-gray-300 p-3">{item.jenis_kriteria}</td>
