@@ -17,7 +17,7 @@ export const getAllKriteria = async (): Promise<Kriteria[]> => {
     return []; // Kembalikan array kosong jika terjadi kesalahan
   }
 };
-  
+
 
 // Fetch Kriteria by ID
 export const getKriteriaById = async (id: number): Promise<Kriteria> => {
@@ -32,11 +32,14 @@ export const getKriteriaById = async (id: number): Promise<Kriteria> => {
   }
 };
 
-// Create a new Kriteria
+// Updated `createKriteria` service
 export const createKriteria = async (data: Omit<Kriteria, "id">): Promise<Kriteria> => {
   try {
     console.log("[POST] Creating a new Kriteria...", data);
-    const response = await axios.post<ApiResponse<Kriteria>>(API_URL, data);
+    const response = await axios.post<ApiResponse<Kriteria>>(API_URL, {
+      ...data,
+      bobot_kriteria: parseInt(data.bobot_kriteria.toString()), // Pastikan dalam integer
+    });
     console.log("[POST] Response data:", response.data);
     return response.data.data;
   } catch (error) {
@@ -44,6 +47,8 @@ export const createKriteria = async (data: Omit<Kriteria, "id">): Promise<Kriter
     throw new Error("Gagal membuat data Kriteria");
   }
 };
+
+
 
 // Update an existing Kriteria
 export const updateKriteria = async (id: number, data: Omit<Kriteria, "id">): Promise<Kriteria> => {
