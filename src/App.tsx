@@ -8,6 +8,8 @@ import KriteriaPage from './pages/Kriteria/KriteriaPage'
 import KelasPage from './pages/Kelas/KelasPage'
 import SiswaPage from './pages/Siswa/SiswaPage'
 import LoginPage from './pages/LoginPage'
+import PenilaianPage from './pages/Penilaian/PenilaianPage'
+import UserPage from './pages/User/UserPage'
 // import DataKriteriaPage from './pages/kriteria/DataKriteriaPage'
 // import DataSiswaPage from './pages/siswa/DataSiswaPage'
 
@@ -23,6 +25,8 @@ function App() {
           <Route path='/kriteria' element={<KriteriaPage/>}/>
           <Route path='/kelas' element={<KelasPage/>}/>
           <Route path='/siswa' element={<SiswaPage/>}/>
+          <Route path='/penilaian' element={<PenilaianPage/>}/>
+          <Route path='/user' element={<UserPage/>}/>
           {/* <Route path='/kriteria' element={<DataKriteriaPage/>}/>
           <Route path='/siswa' element={<DataSiswaPage/>}/> */}
         </Routes>
