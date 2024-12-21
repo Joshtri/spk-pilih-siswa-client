@@ -1,26 +1,29 @@
-// import React, { useState } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { FaUserCircle } from "react-icons/fa";
 
-function Navbar() {
+interface NavbarProps {
+  isSidebarOpen: boolean;
+  toggleSidebar: () => void;
+}
+
+const Navbar: React.FC<NavbarProps> = ({ isSidebarOpen, toggleSidebar }) => {
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  const toggleDropdown = () => {
+    setIsDropdownOpen(!isDropdownOpen);
+  };
+
   return (
     <nav className="bg-white border-gray-200 shadow-md">
-      <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
-        {/* Navbar Brand */}
-        <a href="#" className="flex items-center">
-          <span className="self-center text-2xl font-semibold whitespace-nowrap">
-            SPK | Pemilihan Siswa Berprestasi
-          </span>
-        </a>
-
-        {/* Mobile Menu Toggle */}
+      <div className="max-w-screen-xl flex items-center justify-between mx-auto p-4">
+        {/* Sidebar Toggle Button */}
         <button
-          data-collapse-toggle="navbar-default"
-          type="button"
+          onClick={toggleSidebar}
           className="inline-flex items-center p-2 w-10 h-10 justify-center text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200"
-          aria-controls="navbar-default"
-          aria-expanded="false"
+          aria-expanded={isSidebarOpen}
+          aria-label="Toggle sidebar"
         >
-          <span className="sr-only">Open main menu</span>
           <svg
             className="w-5 h-5"
             xmlns="http://www.w3.org/2000/svg"
@@ -37,114 +40,52 @@ function Navbar() {
           </svg>
         </button>
 
-        {/* Desktop Menu */}
-        <div className="hidden w-full md:block md:w-auto" id="navbar-default">
-          <ul className="flex flex-col font-medium md:flex-row md:space-x-8 mt-4 md:mt-0">
-            <li>
-              <Link
-                to="/dashboard"
-                className="block py-2 pl-3 pr-4 text-gray-700 hover:text-blue-600 hover:font-medium md:p-0"
-              >
-                Dashboard
-              </Link>
-            </li>
+        {/* Title */}
+        <a href="#" className="flex items-center">
+          <span className="self-center text-2xl font-semibold whitespace-nowrap">
+            SPK | Pemilihan Siswa Berprestasi
+          </span>
+        </a>
 
-            {/* Dropdown: Data */}
-            <li className="relative group">
-              <button className="block w-full py-2 pl-3 pr-4 text-gray-700 hover:text-blue-600 md:p-0">
-                Data
-              </button>
-              <ul className="absolute hidden group-hover:block bg-white border shadow-lg mt-1 rounded-lg p-2 min-w-[200px] transition-all duration-200 ease-in-out">
-                <li>
-                  <Link
-                    to="/siswa"
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-100 hover:rounded-md"
-                  >
-                    Data Siswa
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    to="/mata-pelajaran"
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-100 hover:rounded-md"
-                  >
-                    Data Mata Pelajaran
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    to="/kelas"
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-100 hover:rounded-md"
-                  >
-                    Data Kelas
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    to="/kriteria"
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-100 hover:rounded-md"
-                  >
-                    Data Kriteria
-                  </Link>
-                </li>
-              </ul>
-            </li>
+        {/* Profile Dropdown */}
+        <div className="relative">
+          <button
+            onClick={toggleDropdown}
+            className="flex items-center space-x-2 p-2 text-gray-700 hover:bg-gray-100 rounded-lg focus:outline-none"
+            aria-haspopup="true"
+            aria-expanded={isDropdownOpen}
+          >
+            <FaUserCircle className="w-6 h-6" />
+            <span className="hidden md:inline">Nama Pengguna</span>
+          </button>
 
-            {/* Dropdown: Penilaian */}
-            <li className="relative group">
-              <button className="block w-full py-2 pl-3 pr-4 text-gray-700 hover:text-blue-600 md:p-0">
-                Penilaian
-              </button>
-              <ul className="absolute left-0 hidden group-hover:block bg-white border shadow-lg mt-1 rounded-lg p-2 transition-all duration-200 ease-in-out">
-                <li>
-                  <Link
-                    to="/nilai-siswa"
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-100 hover:rounded-md"
-                  >
-                    Nilai Siswa
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    to="/ketidakhadiran"
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-100 hover:rounded-md"
-                  >
-                    Ketidakhadiran
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    to="/ekskul-siswa"
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-100 hover:rounded-md"
-                  >
-                    Ekstra Kurikuler Siswa
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    to="/nilai-kriteria"
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-100 hover:rounded-md"
-                  >
-                    Nilai Kriteria
-                  </Link>
-                </li>
-              </ul>
-            </li>
-
-            {/* Perhitungan Menu */}
-            <li>
-              <Link
-                to="/perhitungan"
-                className="block py-2 pl-3 pr-4 text-gray-700 hover:text-blue-600 md:p-0"
-              >
-                Perhitungan
-              </Link>
-            </li>
-          </ul>
+          {/* Dropdown Menu */}
+          {isDropdownOpen && (
+            <ul className="absolute right-0 mt-2 w-48 bg-white border shadow-lg rounded-lg z-50">
+              <li>
+                <Link
+                  to="/profile"
+                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-100"
+                >
+                  Profil
+                </Link>
+              </li>
+              <li>
+                <button
+                  onClick={() => {
+                    console.log("Logout berhasil");
+                  }}
+                  className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-blue-100"
+                >
+                  Logout
+                </button>
+              </li>
+            </ul>
+          )}
         </div>
       </div>
     </nav>
   );
-}
+};
 
 export default Navbar;
