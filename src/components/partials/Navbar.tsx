@@ -73,10 +73,10 @@ function Navbar() {
                 </li>
                 <li>
                   <Link
-                    to="/ekskul"
+                    to="/kelas"
                     className="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-100 hover:rounded-md"
                   >
-                    Data Ekstra Kurikuler
+                    Data Kelas
                   </Link>
                 </li>
                 <li>
