@@ -1,18 +1,16 @@
 import React from "react";
-import { FaEdit, FaTrashAlt, FaEye } from "react-icons/fa";
+import { FaEdit, FaTrashAlt } from "react-icons/fa";
 import { Kriteria } from "../../types/kriteria";
 
 interface KriteriaListProps {
-  kriteria: Kriteria[]; // Data yang diterima dari parent
-  onEdit: (kriteria: Kriteria) => void; // Callback untuk edit
-  onDelete: (id: number) => void; // Callback untuk delete
-  onView: (kriteria: Kriteria) => void; // Callback untuk view
-
+  kriteria: Kriteria[];
+  onEdit: (kriteria: Kriteria) => void;
+  onDelete: (kriteria: Kriteria) => void;
 }
 
-const KriteriaList: React.FC<KriteriaListProps> = ({ kriteria, onEdit, onDelete, onView }) => {
+const KriteriaList: React.FC<KriteriaListProps> = ({ kriteria, onEdit, onDelete }) => {
   if (kriteria.length === 0) {
-    return <p className="text-gray-500 text-center">Tidak ada data kriteria yang tersedia.</p>;
+    return <p className="text-gray-500 text-center">Tidak ada data kriteria.</p>;
   }
 
   return (
@@ -23,8 +21,8 @@ const KriteriaList: React.FC<KriteriaListProps> = ({ kriteria, onEdit, onDelete,
           <tr className="bg-blue-100 text-blue-800 text-sm">
             <th className="border border-gray-300 p-3 text-left">ID</th>
             <th className="border border-gray-300 p-3 text-left">Nama Kriteria</th>
-            <th className="border border-gray-300 p-3 text-left">Jenis Kriteria</th>
             <th className="border border-gray-300 p-3 text-left">Bobot (%)</th>
+            <th className="border border-gray-300 p-3 text-left">Jenis Kriteria</th>
             <th className="border border-gray-300 p-3 text-center">Aksi</th>
           </tr>
         </thead>
@@ -33,27 +31,18 @@ const KriteriaList: React.FC<KriteriaListProps> = ({ kriteria, onEdit, onDelete,
             <tr key={item.id} className="hover:bg-gray-50 transition duration-200 ease-in-out">
               <td className="border border-gray-300 p-3">{item.id}</td>
               <td className="border border-gray-300 p-3">{item.nama_kriteria}</td>
+              <td className="border border-gray-300 p-3">{item.bobot_kriteria * 100}</td>
               <td className="border border-gray-300 p-3">{item.jenis_kriteria}</td>
-              <td className="border border-gray-300 p-3">{item.bobot_kriteria}</td>
-              <td className="border border-gray-300 p-3 text-center flex justify-center gap-4">
+              <td className="border border-gray-300 p-3 text-center flex gap-4 justify-center">
                 <button
-                  className="text-green-500 hover:text-green-700"
-                  title="View"
-                  onClick={() => onView(item)}
-                >
-                  <FaEye size={18} />
-                </button>
-                <button
-                  className="text-blue-500 hover:text-blue-700"
-                  title="Edit"
                   onClick={() => onEdit(item)}
+                  className="text-blue-500 hover:text-blue-700"
                 >
                   <FaEdit size={18} />
                 </button>
                 <button
+                  onClick={() => onDelete(item)}
                   className="text-red-500 hover:text-red-700"
-                  title="Delete"
-                  onClick={() => onDelete(item.id)}
                 >
                   <FaTrashAlt size={18} />
                 </button>
