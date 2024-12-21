@@ -35,7 +35,7 @@ export const getKelasById = async (id: number): Promise<Kelas> => {
 // Create a new Kelas
 export const createKelas = async (data: Omit<Kelas, "id">): Promise<Kelas> => {
   try {
-    console.log("[POST] Creating a new Kelas...", data);
+    console.log("[POST] Creating a new Kelas with payload:", data); // Logging payload
     const response = await axios.post<ApiResponse<Kelas>>(API_URL, data);
     const createdData = response.data?.data;
     console.log("[POST] Response data:", createdData);
