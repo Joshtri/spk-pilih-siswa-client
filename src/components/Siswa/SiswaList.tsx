@@ -20,7 +20,7 @@ const SiswaList: React.FC<SiswaListProps> = ({ siswa, onEdit, onDelete, onView }
       <table className="w-full table-auto border-collapse border border-gray-200 rounded-lg">
         <thead>
           <tr className="bg-blue-100 text-blue-800 text-sm">
-            <th className="border border-gray-300 p-3 text-left">ID</th>
+            <th className="border border-gray-300 p-3 text-left">No</th>
             <th className="border border-gray-300 p-3 text-left">NISN</th>
             <th className="border border-gray-300 p-3 text-left">Nama</th>
             <th className="border border-gray-300 p-3 text-left">Jenis Kelamin</th>
@@ -30,9 +30,10 @@ const SiswaList: React.FC<SiswaListProps> = ({ siswa, onEdit, onDelete, onView }
           </tr>
         </thead>
         <tbody>
-          {siswa.map((item) => (
+          {siswa.map((item,index) => (
             <tr key={item.id} className="hover:bg-gray-50 transition duration-200 ease-in-out">
-              <td className="border border-gray-300 p-3">{item.id}</td>
+              {/* <td className="border border-gray-300 p-3">{item.id}</td> */}
+              <td className="border border-gray-300 p-3">{index + 1}</td>
               <td className="border border-gray-300 p-3">{item.nisn}</td>
               <td className="border border-gray-300 p-3">{item.nama}</td>
               <td className="border border-gray-300 p-3">{item.jenis_kelamin}</td>
