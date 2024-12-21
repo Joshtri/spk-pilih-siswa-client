@@ -7,6 +7,7 @@ import DashboardPage from './pages/DashboardPage'
 import KriteriaPage from './pages/Kriteria/KriteriaPage'
 import KelasPage from './pages/Kelas/KelasPage'
 import SiswaPage from './pages/Siswa/SiswaPage'
+import LoginPage from './pages/LoginPage'
 // import DataKriteriaPage from './pages/kriteria/DataKriteriaPage'
 // import DataSiswaPage from './pages/siswa/DataSiswaPage'
 
@@ -17,6 +18,7 @@ function App() {
     <>
       <BrowserRouter>
         <Routes>
+          <Route path='/' element={<LoginPage/>}/>
           <Route path='/dashboard' element={<DashboardPage/>} />
           <Route path='/kriteria' element={<KriteriaPage/>}/>
           <Route path='/kelas' element={<KelasPage/>}/>
