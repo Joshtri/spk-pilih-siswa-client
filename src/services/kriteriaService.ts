@@ -17,7 +17,7 @@ export const getAllKriteria = async (): Promise<Kriteria[]> => {
     return []; // Kembalikan array kosong jika terjadi kesalahan
   }
 };
-
+  
 
 // Fetch Kriteria by ID
 export const getKriteriaById = async (id: number): Promise<Kriteria> => {
