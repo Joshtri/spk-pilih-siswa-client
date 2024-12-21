@@ -3,15 +3,20 @@ import Layout from "../Layout";
 import KriteriaList from "../../components/Kriteria/KriteriaList";
 import Breadcrumbs from "../../components/Breadcrumbs";
 import KriteriaForm from "../../components/Kriteria/KriteriaForm";
-import ReusableModal from "../../components/partials/ReusableModal"; // Import modal
+import ReusableModal from "../../components/partials/ReusableModal";
 import { Kriteria } from "../../types/kriteria";
-import { createKriteria, updateKriteria, getAllKriteria, deleteKriteria } from "../../services/kriteriaService";
+import {
+  createKriteria,
+  updateKriteria,
+  getAllKriteria,
+  deleteKriteria,
+} from "../../services/kriteriaService";
 
 const KriteriaPage: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isViewModalOpen, setIsViewModalOpen] = useState(false); // State untuk modal view
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [editingKriteria, setEditingKriteria] = useState<Kriteria | null>(null);
-  const [viewingKriteria, setViewingKriteria] = useState<Kriteria | null>(null); // State untuk data view
+  const [deletingKriteria, setDeletingKriteria] = useState<Kriteria | null>(null);
   const [kriteriaList, setKriteriaList] = useState<Kriteria[]>([]);
 
   const breadcrumbItems = [
@@ -19,7 +24,7 @@ const KriteriaPage: React.FC = () => {
     { label: "Data Kriteria" },
   ];
 
-  // Fetch all Kriteria on component mount
+  // Fetch data
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -33,31 +38,31 @@ const KriteriaPage: React.FC = () => {
     fetchData();
   }, []);
 
-  // Handle opening the modal for adding or editing a kriteria
+  // Open modal for add/edit
   const handleOpenModal = (kriteria?: Kriteria) => {
     setEditingKriteria(kriteria || null);
     setIsModalOpen(true);
   };
 
-  // Handle opening the modal for viewing a kriteria
-  const handleOpenViewModal = (kriteria: Kriteria) => {
-    setViewingKriteria(kriteria);
-    setIsViewModalOpen(true);
-  };
-
-  // Handle closing the modal
+  // Close add/edit modal
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setEditingKriteria(null);
   };
 
-  // Handle closing the view modal
-  const handleCloseViewModal = () => {
-    setIsViewModalOpen(false);
-    setViewingKriteria(null);
+  // Open modal for delete confirmation
+  const handleOpenDeleteModal = (kriteria: Kriteria) => {
+    setDeletingKriteria(kriteria);
+    setIsDeleteModalOpen(true);
   };
 
-  // Handle saving the kriteria data
+  // Close delete confirmation modal
+  const handleCloseDeleteModal = () => {
+    setIsDeleteModalOpen(false);
+    setDeletingKriteria(null);
+  };
+
+  // Save data
   const handleSaveKriteria = async (data: Omit<Kriteria, "id">) => {
     try {
       if (editingKriteria) {
@@ -65,11 +70,9 @@ const KriteriaPage: React.FC = () => {
         setKriteriaList((prev) =>
           prev.map((item) => (item.id === updatedKriteria.id ? updatedKriteria : item))
         );
-        console.log("Kriteria updated:", updatedKriteria);
       } else {
         const newKriteria = await createKriteria(data);
         setKriteriaList((prev) => [...prev, newKriteria]);
-        console.log("Kriteria created:", newKriteria);
       }
     } catch (error) {
       console.error("Error saving kriteria:", error);
@@ -78,14 +81,20 @@ const KriteriaPage: React.FC = () => {
     }
   };
 
-  // Handle deleting a kriteria
-  const handleDeleteKriteria = async (id: number) => {
+  // Delete data
+  const handleDeleteKriteria = async () => {
     try {
-      await deleteKriteria(id);
-      setKriteriaList((prev) => prev.filter((item) => item.id !== id));
-      console.log("Kriteria deleted:", id);
+      if (deletingKriteria) {
+        await deleteKriteria(deletingKriteria.id);
+        setKriteriaList((prev) =>
+          prev.filter((item) => item.id !== deletingKriteria.id)
+        );
+        setDeletingKriteria(null);
+      }
     } catch (error) {
       console.error("Error deleting kriteria:", error);
+    } finally {
+      setIsDeleteModalOpen(false);
     }
   };
 
@@ -93,7 +102,9 @@ const KriteriaPage: React.FC = () => {
     <Layout>
       <Breadcrumbs items={breadcrumbItems} />
 
-      <h1 className="text-2xl font-bold text-center text-gray-800 mb-6">Data Kriteria</h1>
+      <h1 className="text-2xl font-bold text-center text-gray-800 mb-6">
+        Data Kriteria
+      </h1>
 
       <div className="flex justify-end mb-4">
         <button
@@ -107,11 +118,10 @@ const KriteriaPage: React.FC = () => {
       <KriteriaList
         kriteria={kriteriaList}
         onEdit={handleOpenModal}
-        onDelete={handleDeleteKriteria}
-        onView={handleOpenViewModal} // Tambahkan handler view
+        onDelete={handleOpenDeleteModal}
       />
 
-      {/* Modal for KriteriaForm */}
+      {/* Modal for Add/Edit */}
       <KriteriaForm
         isOpen={isModalOpen}
         onClose={handleCloseModal}
@@ -119,13 +129,31 @@ const KriteriaPage: React.FC = () => {
         initialData={editingKriteria || undefined}
       />
 
-      {/* Modal for Viewing Kriteria */}
-      {isViewModalOpen && viewingKriteria && (
-        <ReusableModal title="Detail Kriteria" isOpen={isViewModalOpen} onClose={handleCloseViewModal}>
-          <p><strong>ID:</strong> {viewingKriteria.id}</p>
-          <p><strong>Nama Kriteria:</strong> {viewingKriteria.nama_kriteria}</p>
-          <p><strong>Jenis Kriteria:</strong> {viewingKriteria.jenis_kriteria}</p>
-          <p><strong>Bobot Kriteria:</strong> {viewingKriteria.bobot_kriteria * 100}%</p>
+      {/* Modal for Delete Confirmation */}
+      {isDeleteModalOpen && deletingKriteria && (
+        <ReusableModal
+          title="Konfirmasi Hapus"
+          isOpen={isDeleteModalOpen}
+          onClose={handleCloseDeleteModal}
+        >
+          <p>
+            Apakah Anda yakin ingin menghapus kriteria{" "}
+            <strong>{deletingKriteria.nama_kriteria}</strong>?
+          </p>
+          <div className="mt-4 flex justify-end gap-2">
+            <button
+              onClick={handleCloseDeleteModal}
+              className="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400"
+            >
+              Batal
+            </button>
+            <button
+              onClick={handleDeleteKriteria}
+              className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+            >
+              Hapus
+            </button>
+          </div>
         </ReusableModal>
       )}
     </Layout>
