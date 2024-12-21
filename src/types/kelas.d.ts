@@ -1,4 +1,4 @@
 export interface Kelas{
-    id:string;
+    id:number;
     nama_kelas:string;
 }
