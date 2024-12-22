@@ -13,11 +13,19 @@ const SiswaPage: React.FC = () => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [editingSiswa, setEditingSiswa] = useState<Siswa | null>(null);
   const [deletingSiswa, setDeletingSiswa] = useState<Siswa | null>(null);
+  const [viewingSiswa, setViewingSiswa] = useState<Siswa | null>(null);
+  const [isViewModalOpen, setIsViewModalOpen] = useState(false);
 
   const breadcrumbItems = [
     { label: "Dashboard", href: "/dashboard" },
     { label: "Data Siswa" },
   ];
+
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -50,6 +58,16 @@ const SiswaPage: React.FC = () => {
   const handleCloseDeleteModal = () => {
     setIsDeleteModalOpen(false);
     setDeletingSiswa(null);
+  };
+
+  const handleOpenViewModal = (siswa: Siswa) => {
+    setViewingSiswa(siswa);
+    setIsViewModalOpen(true);
+  };
+
+  const handleCloseViewModal = () => {
+    setViewingSiswa(null);
+    setIsViewModalOpen(false);
   };
 
   const handleSaveSiswa = async (data: Omit<Siswa, "id">) => {
@@ -85,7 +103,7 @@ const SiswaPage: React.FC = () => {
   };
 
   return (
-    <Layout>
+    <Layout isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar}>
       <Breadcrumbs items={breadcrumbItems} />
       <h1 className="text-2xl font-bold text-center text-gray-800 mb-6">Data Siswa</h1>
 
@@ -102,10 +120,9 @@ const SiswaPage: React.FC = () => {
         siswa={siswaList}
         onEdit={handleOpenModal}
         onDelete={handleOpenDeleteModal}
-        onView={() => {}}
+        onView={handleOpenViewModal}
       />
 
-      {/* Add/Edit Modal */}
       <SiswaForm
         isOpen={isModalOpen}
         onClose={handleCloseModal}
@@ -113,7 +130,30 @@ const SiswaPage: React.FC = () => {
         initialData={editingSiswa || undefined}
       />
 
-      {/* Delete Confirmation Modal */}
+      {isViewModalOpen && viewingSiswa && (
+        <ReusableModal
+          title="Detail Siswa"
+        isOpen={isViewModalOpen}
+          onClose={handleCloseViewModal}
+        >
+          <div className="p-4">
+            <p><strong>NISN:</strong> {viewingSiswa.nisn}</p>
+            <p><strong>Nama:</strong> {viewingSiswa.nama}</p>
+            <p><strong>Jenis Kelamin:</strong> {viewingSiswa.jenis_kelamin}</p>
+            <p><strong>Alamat:</strong> {viewingSiswa.alamat}</p>
+            <p><strong>Kelas ID:</strong> {viewingSiswa.kelasId}</p>
+          </div>
+          <div className="mt-4 flex justify-end gap-2">
+            <button
+              onClick={handleCloseViewModal}
+              className="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400"
+            >
+              Tutup
+            </button>
+          </div>
+        </ReusableModal>
+      )}
+
       {isDeleteModalOpen && deletingSiswa && (
         <ReusableModal
           title="Konfirmasi Hapus"
