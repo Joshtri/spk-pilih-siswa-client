@@ -1,23 +1,17 @@
 import React from "react";
 import { FaEdit, FaTrashAlt } from "react-icons/fa";
 import { User } from "../../types/user";
-// Tipe untuk data User
-// export interface User {
-//   nama: string;
-//   username: string;
-//   email: string;
-//   password: string;
-//   nomorWa: string;
-// }
 
 interface UserListProps {
-  users: User[];
+  users: User[] | undefined; // Izinkan undefined
   onEdit: (user: User) => void;
   onDelete: (user: User) => void;
 }
 
-const UserList: React.FC<UserListProps> = ({ users, onEdit, onDelete }) => {
-  if (users.length === 0) {
+const UserList: React.FC<UserListProps> = ({ users = [], onEdit, onDelete }) => {
+  console.log("UserList received users:", users); // Log daftar pengguna
+
+  if (!users || users.length === 0) {
     return <p className="text-gray-500 text-center">Tidak ada data pengguna.</p>;
   }
 
@@ -37,26 +31,17 @@ const UserList: React.FC<UserListProps> = ({ users, onEdit, onDelete }) => {
         </thead>
         <tbody>
           {users.map((user, index) => (
-            <tr
-              key={user.username}
-              className="hover:bg-gray-50 transition duration-200 ease-in-out"
-            >
+            <tr key={user.username || user.id}>
               <td className="border border-gray-300 p-3">{index + 1}</td>
               <td className="border border-gray-300 p-3">{user.nama}</td>
               <td className="border border-gray-300 p-3">{user.username}</td>
               <td className="border border-gray-300 p-3">{user.email}</td>
               <td className="border border-gray-300 p-3">{user.nomorWa}</td>
               <td className="border border-gray-300 p-3 text-center flex gap-4 justify-center">
-                <button
-                  onClick={() => onEdit(user)}
-                  className="text-blue-500 hover:text-blue-700"
-                >
+                <button onClick={() => onEdit(user)} className="text-blue-500 hover:text-blue-700">
                   <FaEdit size={18} />
                 </button>
-                <button
-                  onClick={() => onDelete(user)}
-                  className="text-red-500 hover:text-red-700"
-                >
+                <button onClick={() => onDelete(user)} className="text-red-500 hover:text-red-700">
                   <FaTrashAlt size={18} />
                 </button>
               </td>
@@ -67,5 +52,6 @@ const UserList: React.FC<UserListProps> = ({ users, onEdit, onDelete }) => {
     </div>
   );
 };
+
 
 export default UserList;
