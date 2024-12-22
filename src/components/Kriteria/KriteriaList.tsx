@@ -1,14 +1,15 @@
 import React from "react";
-import { FaEdit, FaTrashAlt } from "react-icons/fa";
+import { FaEdit, FaEye, FaTrashAlt } from "react-icons/fa";
 import { Kriteria } from "../../types/kriteria";
 
 interface KriteriaListProps {
   kriteria: Kriteria[];
   onEdit: (kriteria: Kriteria) => void;
   onDelete: (kriteria: Kriteria) => void;
+  onView: (kriteria: Kriteria)=> void;
 }
 
-const KriteriaList: React.FC<KriteriaListProps> = ({ kriteria, onEdit, onDelete }) => {
+const KriteriaList: React.FC<KriteriaListProps> = ({ kriteria, onEdit, onDelete, onView }) => {
   if (kriteria.length === 0) {
     return <p className="text-gray-500 text-center">Tidak ada data kriteria.</p>;
   }
@@ -35,6 +36,12 @@ const KriteriaList: React.FC<KriteriaListProps> = ({ kriteria, onEdit, onDelete 
               <td className="border border-gray-300 p-3">{item.bobot_kriteria * 100}</td>
               <td className="border border-gray-300 p-3">{item.jenis_kriteria}</td>
               <td className="border border-gray-300 p-3 text-center flex gap-4 justify-center">
+                <button
+                  onClick={() => onView(item)}
+                  className="text-green-500 hover:text-green-700"
+                >
+                  <FaEye size={18} />
+                </button>
                 <button
                   onClick={() => onEdit(item)}
                   className="text-blue-500 hover:text-blue-700"
